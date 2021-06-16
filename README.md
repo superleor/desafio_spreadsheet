@@ -12,7 +12,6 @@ calculates the average grade of every student and informs them if they passed or
 - extract folder if downloaded
 - open a new terminal
 - execute 'npm install'
-- after the installation is complete, type 'npm start'
-- open a new browser window and type 'localhost:3000'
+- after the installation is complete, type 'npm start' (this will open a new window with the information on your browser)
 - check to see if the spreadsheet has changed
 ```

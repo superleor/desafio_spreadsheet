@@ -18,7 +18,7 @@ app.get('/', async (req, res) => {
     const spreadsheetId = "1JQVnvkzptgX57MfdMGVUB4wH5BYkoANsiqXJsoLfV6k"
 
     //the situation and (if needed) grades for each student to pass will be stored here
-    let sit = []
+    let update = []
 
     //firstly it stores the values from the spreadSheet into a const
     const studentsData = await sheets.spreadsheets.values.get({
@@ -32,24 +32,24 @@ app.get('/', async (req, res) => {
     if (rows.length) {
         rows.map((row) => {
             if (row[2] > 15) { //number of classes that can be missed
-                sit[row[0] - 1] = [
+                update[row[0] - 1] = [
                     'Reprovado por falta',
                     0
                 ]
             } else {
                 let average = Math.ceil((parseInt(row[3]) + parseInt(row[4]) + parseInt(row[5])) / 3) //average of the grade, rounded up
                 if (average < 50) {
-                    sit[row[0] - 1] = [
+                    update[row[0] - 1] = [
                         'Reprovado por nota',
                         0
                     ]
                 } else if (average >= 50 && average < 70) {
-                    sit[row[0] - 1] = [
+                    update[row[0] - 1] = [
                         'Exame Final',
                         100 - average
                     ]
                 } else if (average > 70) {
-                    sit[row[0] - 1] = [
+                    update[row[0] - 1] = [
                         'Aprovado',
                         0
                     ]
@@ -63,7 +63,7 @@ app.get('/', async (req, res) => {
     //now for writing in the spreadsheet itself
 
     let resource = {
-        values: sit
+        values: update
     }
     await sheets.spreadsheets.values.append({
         auth,
@@ -73,7 +73,7 @@ app.get('/', async (req, res) => {
         resource
     })
 
-    res.send(sit)
+    res.send(update)
 })
 
 app.listen(3000, (req, res) => console.log('running on 3000'))
